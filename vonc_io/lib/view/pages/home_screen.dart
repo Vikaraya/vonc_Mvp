@@ -1,13 +1,13 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:vonc_io/common_widget/data.dart';
+import 'package:vonc_io/view/home/catogriespage.dart';
 import 'package:vonc_io/view/pages/cervices.dart';
 import 'package:vonc_io/view/pages/food_page.dart';
 import 'package:vonc_io/view/pages/living_Essentials.dart';
 import 'package:vonc_io/view/pages/living_generals.dart';
 import 'package:vonc_io/view/pages/offers_page.dart';
 import 'package:vonc_io/view/pages/vonc_io_screens.dart';
-
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -666,23 +666,228 @@ class Living_Essentials_home extends StatefulWidget {
 }
 
 class _Living_Essentials_homeState extends State<Living_Essentials_home> {
+  final List<Map<String, dynamic>> categories = [
+    {'title': 'All', 'icon': Icons.all_inclusive},
+    {'title': 'Fruits', 'icon': Icons.apple_rounded},
+    {'title': 'Vegetables', 'icon': Icons.crop_landscape},
+    {'title': 'Cleaners', 'icon': Icons.cleaning_services},
+    {'title': 'Sweets', 'icon': Icons.cake},
+    {'title': 'Dairy', 'icon': Icons.local_drink},
+    {'title': 'Bakery', 'icon': Icons.bakery_dining},
+    {'title': 'Meat', 'icon': Icons.restaurant},
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.green.shade800,
-      body: SafeArea(
-          child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 20,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        toolbarHeight: 200,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        flexibleSpace: ClipPath(
+          clipper: AppBarCustomClipper(),
+          child: Container(
+            height: 200,
+            width: MediaQuery.sizeOf(context).width,
+            decoration: BoxDecoration(
+              color: Color(0xFF004D40),
             ),
-            child: Row(
-              children: [],
+            child: Positioned(
+              top: 120,
+              left: 0,
+              right: 0,
+              child: CarouselSlider.builder(
+                options: CarouselOptions(
+                  height: 120,
+                  enlargeCenterPage: true,
+                  viewportFraction: 0.4,
+                  autoPlay: true,
+                  autoPlayInterval: const Duration(seconds: 3),
+                ),
+                itemCount: categories.length,
+                itemBuilder: (context, index, realIndex) {
+                  return Column(
+                    children: [
+                      CircleAvatar(
+                        radius: 40,
+                        backgroundColor: Colors.orange,
+                        child: Icon(
+                          categories[index]['icon'],
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        categories[index]['title'],
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 10),
+                      ),
+                    ],
+                  );
+                },
+              ),
             ),
           ),
-        ],
-      )),
+        ),
+      ),
+      
     );
+  }
+}
+
+// class ProductGrid extends StatelessWidget {
+//   final List<Product> products = [
+//     Product(
+//       name: 'Broccoli(Local Shop)',
+//       image:
+//           'assets/img/living_essentails/broccoli.png', // Replace with actual image path
+//       details: '500 g',
+//       price: 17.295,
+//     ),
+//     Product(
+//       name: 'apple (Local Shop)',
+//       image:
+//           'assets/img/living_essentails/apple.png', // Replace with actual image path
+//       details: '450 g',
+//       price: 14.295,
+//     ),
+//     Product(
+//       name: 'potato (Local Shop)',
+//       image:
+//           'assets/img/living_essentails/potato.png', // Replace with actual image path
+//       details: '1000 g',
+//       price: 27.295,
+//     ),
+//     Product(
+//       name: 'Carrot (Local Carrot)',
+//       image:
+//           'assets/img/living_essentails/carrot.png', // Replace with actual image path
+//       details: '1000 g',
+//       price: 27.295,
+//     ),
+//     Product(
+//       name: 'Carrot (Local Carrot)',
+//       image:
+//           'assets/img/living_essentails/carrot.png', // Replace with actual image path
+//       details: '1000 g',
+//       price: 27.295,
+//     ),
+//     Product(
+//       name: 'Carrot (Local Carrot)',
+//       image:
+//           'assets/img/living_essentails/carrot.png', // Replace with actual image path
+//       details: '1000 g',
+//       price: 27.295,
+//     ),
+//     Product(
+//       name: 'Carrot (Local Carrot)',
+//       image:
+//           'assets/img/living_essentails/carrot.png', // Replace with actual image path
+//       details: '1000 g',
+//       price: 27.295,
+//     ),
+//     Product(
+//       name: 'Carrot (Local Carrot)',
+//       image:
+//           'assets/img/living_essentails/carrot.png', // Replace with actual image path
+//       details: '1000 g',
+//       price: 27.295,
+//     ),
+//     Product(
+//       name: 'Carrot (Local Carrot)',
+//       image:
+//           'assets/img/living_essentails/carrot.png', // Replace with actual image path
+//       details: '1000 g',
+//       price: 27.295,
+//     ),
+//     Product(
+//       name: 'Carrot (Local Carrot)',
+//       image:
+//           'assets/img/living_essentails/carrot.png', // Replace with actual image path
+//       details: '1000 g',
+//       price: 27.295,
+//     ),
+//     Product(
+//       name: 'Carrot (Local Carrot)',
+//       image:
+//           'assets/img/living_essentails/carrot.png', // Replace with actual image path
+//       details: '1000 g',
+//       price: 27.295,
+//     ),
+//     Product(
+//       name: 'Carrot (Local Carrot)',
+//       image:
+//           'assets/img/living_essentails/carrot.png', // Replace with actual image path
+//       details: '1000 g',
+//       price: 27.295,
+//     ),
+//   ];
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       backgroundColor: Colors.green.shade800,
+//       body: GridView.count(
+//         crossAxisCount: 3, // Number of columns
+//         crossAxisSpacing: 10.0, // Spacing between columns
+//         mainAxisSpacing: 10.0, // Spacing between rows
+
+//         children: products.map((product) {
+//           return Card(
+//             color: Colors.transparent,
+//             child: Column(
+//               children: [
+//                 Image.asset(product.image, height: 40, width: 50),
+//                 Text(product.name),
+//                 Text(product.details),
+//                 Text('₹${product.price.toStringAsFixed(2)}'),
+//                 ElevatedButton(
+//                   onPressed: () {
+//                     // Add to cart logic here
+//                     print('Adding ${product.name} to cart');
+//                   },
+//                   child: Text('Add +'),
+//                 ),
+//               ],
+//             ),
+//           );
+//         }).toList(),
+//       ),
+//     );
+//   }
+// }
+
+class Product {
+  final String name;
+  final String image;
+  final String details;
+  final double price;
+
+  Product({
+    required this.name,
+    required this.image,
+    required this.details,
+    required this.price,
+  });
+}
+
+class AppBarCustomClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    double height = size.height;
+    double width = size.width;
+    var path = Path();
+    path.lineTo(0, height - 50);
+    path.quadraticBezierTo(width / 2, height, width, height - 80);
+    path.lineTo(width, 0);
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
+    return true;
   }
 }

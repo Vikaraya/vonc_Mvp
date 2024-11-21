@@ -1,11 +1,11 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:vonc_io/view/home/curvedappbar.dart';
 import 'package:vonc_io/view/pages/Shopping_cart_page.dart';
 import 'package:vonc_io/view/pages/bell.dart';
 import 'package:vonc_io/view/pages/home_screen.dart';
 import 'package:vonc_io/view/pages/payment_page.dart';
 import 'package:vonc_io/view/pages/user_settings.dart';
-
 
 class LivingEssentials extends StatefulWidget {
   const LivingEssentials({super.key});
@@ -44,13 +44,16 @@ class _LivingEssentialsState extends State<LivingEssentials> {
     ),
   ];
 
+  // curved list
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green.shade800,
+      backgroundColor: Colors.lightGreenAccent.shade700,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.green.shade900,
+        backgroundColor:
+        Color(0xFF004D40),
         title:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Container(

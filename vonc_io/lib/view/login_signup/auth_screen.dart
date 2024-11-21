@@ -1,9 +1,10 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:pinput/pinput.dart';
+import 'package:vonc_io/models/api_service.dart';
 import 'package:vonc_io/view/pages/vonc_main_screen.dart';
-
-
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -664,48 +665,86 @@ class _Email_Password_Verifiction_ScreenState
   final signInKey = GlobalKey<FormState>();
   final signUpKey = GlobalKey<FormState>();
 
-  bool _SignInsubmit() {
-    final isValid = signInKey.currentState!.validate();
-    if (isValid) {
-      signInKey.currentState?.save();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  ApiService get apiService => ApiService(apiUrl);
+  final String apiUrl = 'http://localhost:8000';
 
-      // Navigate to the PhoneVerification screen only if the form is valid
-      Navigator.push(
+  final TextEditingController _userIdController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  String? _responseMessage;
+  void _login() async {
+    final apiService = ApiService(apiUrl); // Ensure apiUrl is defined correctly
+    try {
+      // Call the loginUser method with user input
+      final response = await apiService.loginUser(
+        _userIdController.text, // Get email from user input
+        _passwordController.text, // Get password from user input
+      );
+
+      // Update UI based on API response
+      setState(() {
+        _responseMessage = response['message'] ??
+            'Login successful'; // Fallback message if 'message' key doesn't exist
+      });
+
+      // Navigate to PhoneVerification screen on successful login
+      Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const PhoneVerification()),
+        MaterialPageRoute(
+            builder: (context) =>
+                PhoneVerification()), // Define PhoneVerification screen
       );
-      return true; // Indicate that the submission was successful
-    } else {
-      // Show a SnackBar only if the form is invalid
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Login failed. Please try again.'),
-        ),
-      );
+    } catch (e) {
+      setState(() {
+        _responseMessage = 'Error: ${e.toString()}'; // Display error message
+      });
     }
-    return false; // Indicate that the submission failed
   }
 
-  bool _SignUpsubmit() {
-    final isValid = signUpKey.currentState!.validate();
+  Future<bool> _SignUpsubmit() async {
+    final isValid = signUpKey.currentState!.validate(); // Validate form
     if (isValid) {
-      signUpKey.currentState?.save();
+      signUpKey.currentState?.save(); // Save form state
 
-      // Navigate to the PhoneVerification screen only if the form is valid
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const PhoneVerification()),
-      );
-      return true; // Indicate that the submission was successful
-    } else {
-      // Show a SnackBar only if the form is invalid
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Registration failed. Please try again.'),
-        ),
-      );
+      String email = _userIdController.text; // Get email from input
+      String password = _passwordController.text; // Get password from input
+
+      final apiService = ApiService(apiUrl); // Create an instance of ApiService
+
+      try {
+        final response =
+            await apiService.register(email, password); // Call register API
+
+        if (response['message'] != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+                content: Text(response['message'])), // Show success message
+          );
+
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    PhoneVerification()), // Navigate to PhoneVerification screen
+          );
+
+          return true; // Indicate success
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+                content: Text('Registration failed! Please try again.')),
+          );
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text('Error: ${e.toString()}')), // Display error message
+        );
+      }
     }
-    return false; // Indicate that the submission failed
+
+    return false; // Indicate failure if validation fails or registration fails
   }
 
   bool _isPasswordVisible = false;
@@ -823,7 +862,7 @@ class _Email_Password_Verifiction_ScreenState
                           ),
                         ),
                       ),
-
+                      // signin
                       // Text From Field
                       _isLoginEnabled
                           ? Form(
@@ -1019,11 +1058,7 @@ class _Email_Password_Verifiction_ScreenState
                                       backgroundColor: Colors.blueAccent,
                                       //minimumSize: Size(100, 25),
                                     ),
-                                    onPressed: () {
-                                      setState(() {
-                                        _SignInsubmit();
-                                      });
-                                    },
+                                    onPressed: _login,
                                     child: const Text(
                                       "Next  >>",
                                       style: TextStyle(
@@ -1325,11 +1360,7 @@ class _Email_Password_Verifiction_ScreenState
                                       backgroundColor: Colors.blueAccent,
                                       //minimumSize: Size(100, 25),
                                     ),
-                                    onPressed: () {
-                                      setState(() {
-                                        _SignUpsubmit();
-                                      });
-                                    },
+                                    onPressed: _SignUpsubmit,
                                     child: const Text(
                                       "Next  >>",
                                       style: TextStyle(
