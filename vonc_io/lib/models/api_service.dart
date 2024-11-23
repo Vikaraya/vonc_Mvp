@@ -8,47 +8,40 @@ class ApiService {
 
   Future<Map<String, dynamic>> register(String email, String password) async {
     final response = await http.post(
-      Uri.parse('$apiUrl/signup'), // Use the correct URL for registration
+      Uri.parse('$apiUrl/signup'),
       headers: {'Content-Type': 'application/json'},
-      body: json.encode({'email': email, 'password': password}),
+      body: jsonEncode({'email': email, 'password': password}),
     );
 
-    if (response.statusCode == 201) {
-      return json.decode(response.body); // Return the entire response
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else if (response.statusCode == 400) {
+      return jsonDecode(response.body);
     } else {
-      throw Exception(
-          'Failed to register user: ${response.body}'); // Throw an exception for non-201 responses
+      throw Exception("failed to register");
     }
   }
 
-  Future<Map<String, dynamic>> loginUser(String userId, String password) async {
+  Future<Map<String, dynamic>> loginUser(String email, String password) async {
     try {
       final response = await http.post(
-        Uri.parse('$apiUrl/signup'), // Use the correct URL for login
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode(<String, String>{
-          'email': userId,
-          'password': password,
-        }),
+        Uri.parse('$apiUrl/login'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'email': email, 'password': password}),
       );
 
-      // Print the response for debugging
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
+      print(" Response status: ${response.statusCode}");
+      print(" Response body: ${response.body}");
 
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
       } else {
-        // If the response is not successful, throw an exception with details
-        throw Exception('Failed to log in user: ${response.body}');
+        throw Exception('Failed to login: ${response.body}');
       }
     } catch (error, stackTrace) {
-      // Print detailed error information
       print('Error occurred: $error');
       print('Stack trace: $stackTrace');
-      rethrow; // Optionally rethrow if needed
+      rethrow;
     }
   }
 }
